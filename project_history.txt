@@ -1,0 +1,50 @@
+    1  history -w
+    2  history -w
+    3  sudo mkdir /dir-371197
+    4  ls -ld /dir-371197
+    5  sudo useradd -u 5501 -m user1
+    6  sudo useradd -u 5502 -m user2
+    7  sudo useradd -u 5503 -m user3
+    8  sudo passwd user1
+    9  sudo passwd user2
+   10  sudo passwd user3
+   11  sudo groupadd -g 4444 curators
+   12  sudo useradd -m curator1
+   13  sudo useradd -m curator2
+   14  sudo usermod -aG curators curator1
+   15  sudo usermod -aG curators curator2
+   16  sudo groupadd projectgrp
+   17  sudo usermod -aG projectgrp user1
+   18  sudo usermod -aG projectgrp user2
+   19  sudo usermod -aG projectgrp user3
+   20  sudo chown root:projectgrp /dir-371197
+   21  ls -ld /dir-371197
+   22  sudo chmod 2770 /dir-371197
+   23  ls -ld /dir-371197
+   24  sudo setfacl -m g:curators:rx /dir-371197
+   25  sudo setfacl -d -m g:projectgrp:rwx /dir-371197
+   26  sudo setfacl -d -m g:curators:rx /dir-371197
+   27  sudo setfacl -d -m o::--- /dir-371197
+   28  getfacl /dir-371197
+   29  ls -ld /dir-371197
+   30  history > report_history.txt
+   31  cat /etc/passwd > report_passwd.txt
+   32  cat /etc/group > report_group.txt
+   33  history
+   34  ls
+   35  pwd
+   36  ls
+   37  lsblk
+   38  sudo ./mephi_project.sh
+   39  sudo ssh-keygen -A
+   40  sudo systemctl restart sshd
+   41  sudo systemctl status sshd --no-pager
+   42  sudo ./mephi_project.sh
+   43  curl http://localhost
+   44  curl http://192.168.0.100
+   45  systemctl status nginx --no-pager
+   46  ls -Zd /data/mephi-web
+   47  getcap /usr/sbin/tcpdump
+   48  ls /root
+   49  sudo ls /root
+   50  history > ~/project_history.txt
