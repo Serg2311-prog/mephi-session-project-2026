@@ -1,0 +1,41 @@
+hostnamectl set-hostname mephi-2026.domain.local
+nmcli connection show
+nmcli connection modify "Wired connection 1" ipv4.addresses 192.168.0.100/24
+nmcli connection modify "Wired connection 1" ipv4.gateway 192.168.0.1
+nmcli connection modify "Wired connection 1" ipv4.dns 8.8.8.8
+nmcli connection modify "Wired connection 1" ipv4.method manual
+nmcli connection up "Wired connection 1"
+ip route
+ping -c 4 192.168.0.1 > network_check.txt
+ping -c 4 8.8.8.8 >> network_check.txt
+sudo dnf install -y nginx tcpdump libcap-ng-utils
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+dnf download tcpdump
+sudo rpm -Uvh --replacepkgs tcpdump-4.99.6-2.fc43.x86_64.rpm
+lsblk
+sudo mkfs.ext4 -L MEPHI_DATA /dev/sdb1
+sudo mkdir -p /data/mephi-web
+sudo mount /dev/sdb1 /data/mephi-web
+sudo nano /etc/fstab
+sudo systemctl enable --now nginx
+journalctl -u nginx --since "5 minutes ago" > nginx_recent_logs.txt
+sudo groupadd mephi-devs
+sudo useradd -m mephi-admin
+sudo usermod -aG mephi-devs mephi-admin
+sudo chown mephi-admin:mephi-devs /data/mephi-web
+sudo chmod 2775 /data/mephi-web
+getenforce
+sudo semanage fcontext -a -t httpd_sys_content_t "/data/mephi-web(/.*)?"
+sudo restorecon -Rv /data/mephi-web
+sudo setcap cap_net_raw,cap_net_admin+ep /usr/sbin/tcpdump
+getcap /usr/sbin/tcpdump
+echo root | sudo tee /etc/security/denied_users
+sudo sed -i '1i auth required pam_listfile.so item=user sense=deny file=/etc/security/denied_users onerr=fail' /etc/pam.d/login
+sudo sed -i '1i auth required pam_listfile.so item=user sense=deny file=/etc/security/denied_users onerr=fail' /etc/pam.d/sshd
+sudo systemctl restart sshd
+ssh root@localhost
+echo "Hello from Student: 371197" > /data/mephi-web/index.html
+curl http://localhost
+curl http://192.168.0.100
+history > ~/project_history.txt
